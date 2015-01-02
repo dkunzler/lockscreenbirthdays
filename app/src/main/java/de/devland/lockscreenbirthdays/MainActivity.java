@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -16,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,20 +39,50 @@ public class MainActivity extends Activity {
                                 .commit();
         }
 
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         // iterate through all Contact's Birthdays and print in log
         Cursor cursor = getContactsBirthdays();
         int bDayColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
         int nameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
         int photoColumn = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
+        int idColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID);
         List<Date> birthdaysInRange = new ArrayList<>();
+        int count = 0;
         while (cursor.moveToNext()) {
             String bDay = cursor.getString(bDayColumn);
             String name = cursor.getString(nameColumn);
             String photoUri = cursor.getString(photoColumn);
+            int id = cursor.getInt(idColumn);
             Log.d("BLUB", "Birthday: " + bDay);
-            Notification.Builder notificationBuilder = new Notification.Builder(this);
-            notificationBuilder.
+            Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+            notificationBuilder.setLargeIcon(getContactBitmapFromURI(photoUri))
+                               .setContentTitle(name)
+                               .setContentText("Test")
+                               .setPriority(Notification.PRIORITY_MAX)
+                               .setShowWhen(false)
+                               .setSmallIcon(R.drawable.ic_stat_birthday);
+            Notification notif = notificationBuilder.build();
+            // TODO open contact on click
+            // TODO text
+            notificationManager.notify(id, notif);
         }
+    }
+
+    private Bitmap getContactBitmapFromURI(String uri) {
+        if (uri != null) {
+            InputStream input = null;
+            try {
+                input = getContentResolver().openInputStream(Uri.parse(uri));
+            } catch (FileNotFoundException e) {
+                return null;
+            }
+            if (input == null) {
+                return null;
+            }
+            return BitmapFactory.decodeStream(input);
+        }
+        return null;
     }
 
     private Cursor getContactsBirthdays() {
