@@ -1,0 +1,8 @@
+release.jks
+**/*.apk
+.gradle
+/local.properties
+*.iml
+.idea/
+.DS_Store
+/build
