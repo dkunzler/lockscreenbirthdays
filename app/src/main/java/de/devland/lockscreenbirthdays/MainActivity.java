@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.devland.lockscreenbirthdays.model.Contact;
+
 
 public class MainActivity extends Activity {
 
@@ -42,69 +44,31 @@ public class MainActivity extends Activity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         // iterate through all Contact's Birthdays and print in log
-        Cursor cursor = getContactsBirthdays();
-        int bDayColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
-        int nameColumn = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
-        int photoColumn = cursor.getColumnIndex(ContactsContract.Contacts.PHOTO_URI);
-        int idColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.CONTACT_ID);
-        List<Date> birthdaysInRange = new ArrayList<>();
-        int count = 0;
+        Cursor cursor = Contact.getAllContactsWithBirthdays(getApplicationContext());
+
+        List<Contact> birthdaysInRange = new ArrayList<>();
         while (cursor.moveToNext()) {
-            String bDay = cursor.getString(bDayColumn);
-            String name = cursor.getString(nameColumn);
-            String photoUri = cursor.getString(photoColumn);
-            int id = cursor.getInt(idColumn);
-            Log.d("BLUB", "Birthday: " + bDay);
+            Contact contact = Contact.fromCursor(cursor);
+
+            Log.d("Tag", contact.getBirthday());
             Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
-            notificationBuilder.setLargeIcon(getContactBitmapFromURI(photoUri))
-                               .setContentTitle(name)
-                               .setContentText("Test")
+            notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
+                               .setContentTitle(contact.getDisplayName())
+                               .setContentText(contact.daysTillBirthday() + " " + contact.getNewAge())
                                .setPriority(Notification.PRIORITY_MAX)
                                .setShowWhen(false)
                                .setSmallIcon(R.drawable.ic_stat_birthday);
             Notification notif = notificationBuilder.build();
             // TODO open contact on click
             // TODO text
-            notificationManager.notify(id, notif);
+            // Hat heute/morgen Geburtstag!
+            // Hat in x Tagen Geburtstag!
+            // Wird heute/morgen y!
+            // Wird in x Tagen y!
+            notificationManager.notify(contact.getId(), notif);
         }
     }
 
-    private Bitmap getContactBitmapFromURI(String uri) {
-        if (uri != null) {
-            InputStream input = null;
-            try {
-                input = getContentResolver().openInputStream(Uri.parse(uri));
-            } catch (FileNotFoundException e) {
-                return null;
-            }
-            if (input == null) {
-                return null;
-            }
-            return BitmapFactory.decodeStream(input);
-        }
-        return null;
-    }
-
-    private Cursor getContactsBirthdays() {
-        Uri uri = ContactsContract.Data.CONTENT_URI;
-
-        String[] projection = new String[] {
-                ContactsContract.Contacts.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Event.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Event.START_DATE,
-                ContactsContract.Contacts.PHOTO_URI
-        };
-
-        String where =
-                ContactsContract.Data.MIMETYPE + "= ? AND " +
-                        ContactsContract.CommonDataKinds.Event.TYPE + "=" +
-                        ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
-        String[] selectionArgs = new String[] {
-                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
-        };
-        String sortOrder = null;
-        return managedQuery(uri, projection, where, selectionArgs, sortOrder);
-    }
 
 
     @Override
