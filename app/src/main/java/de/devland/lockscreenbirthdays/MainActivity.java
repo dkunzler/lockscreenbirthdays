@@ -44,28 +44,30 @@ public class MainActivity extends Activity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         // iterate through all Contact's Birthdays and print in log
-        Cursor cursor = Contact.getAllContactsWithBirthdays(getApplicationContext());
+        List<Contact> allContactsWithBirthdays = Contact.getAllContactsWithBirthdays(getApplicationContext());
 
         List<Contact> birthdaysInRange = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            Contact contact = Contact.fromCursor(cursor);
+        for (Contact contact : allContactsWithBirthdays) {
 
             Log.d("Tag", contact.getBirthday());
-            Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
-            notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
-                               .setContentTitle(contact.getDisplayName())
-                               .setContentText(contact.daysTillBirthday() + " " + contact.getNewAge())
-                               .setPriority(Notification.PRIORITY_MAX)
-                               .setShowWhen(false)
-                               .setSmallIcon(R.drawable.ic_stat_birthday);
-            Notification notif = notificationBuilder.build();
-            // TODO open contact on click
-            // TODO text
-            // Hat heute/morgen Geburtstag!
-            // Hat in x Tagen Geburtstag!
-            // Wird heute/morgen y!
-            // Wird in x Tagen y!
-            notificationManager.notify(contact.getId(), notif);
+
+            if (contact.daysTillBirthday() < 30) {
+                Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+                notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
+                        .setContentTitle(contact.getDisplayName())
+                        .setContentText(contact.getMessageText(getApplicationContext()))
+                        .setPriority(Notification.PRIORITY_MAX)
+                        .setShowWhen(false)
+                        .setSmallIcon(R.drawable.ic_stat_birthday);
+                Notification notif = notificationBuilder.build();
+                // TODO open contact on click
+                // TODO text
+                // Hat heute/morgen Geburtstag!
+                // Hat in x Tagen Geburtstag!
+                // Wird heute/morgen y!
+                // Wird in x Tagen y!
+                notificationManager.notify(contact.getId(), notif);
+            }
         }
     }
 

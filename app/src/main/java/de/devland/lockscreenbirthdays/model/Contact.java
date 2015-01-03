@@ -12,20 +12,29 @@ import org.joda.time.LocalDate;
 import org.joda.time.Years;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import de.devland.lockscreenbirthdays.R;
 import lombok.Getter;
 
 /**
  * Created by David Kunzler on 02.01.2015.
  */
 @Getter
-public class Contact {
+public class Contact implements Comparable<Contact> {
     private int id;
 
     private String displayName;
     private String photoUri;
 
     private String birthday;
+    private Birthday birthdayObject;
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+        this.birthdayObject = Birthday.fromString(birthday);
+    }
 
     public static Contact fromCursor(Cursor cursor) {
         int bDayColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE);
@@ -35,15 +44,16 @@ public class Contact {
 
         Contact contact = new Contact();
         contact.id = cursor.getInt(idColumn);
-        contact.birthday = cursor.getString(bDayColumn);
+        contact.setBirthday(cursor.getString(bDayColumn));
         contact.displayName = cursor.getString(nameColumn);
         contact.photoUri = cursor.getString(photoColumn);
 
         return contact;
     }
 
-    public static Cursor getAllContactsWithBirthdays(Context context) {
+    public static List<Contact> getAllContactsWithBirthdays(Context context) {
         Uri uri = ContactsContract.Data.CONTENT_URI;
+        List<Contact> contacts = new ArrayList<>();
 
         String[] projection = new String[] {
                 ContactsContract.Contacts.DISPLAY_NAME,
@@ -60,7 +70,12 @@ public class Contact {
                 ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
         };
         String sortOrder = null;
-        return context.getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
+        Cursor cursor = context.getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
+        while (cursor.moveToNext()) {
+            contacts.add(Contact.fromCursor(cursor));
+        }
+
+        return contacts;
     }
 
     public int daysTillBirthday() {
@@ -72,7 +87,7 @@ public class Contact {
 
     private LocalDate getNextBirthday() {
         LocalDate now = LocalDate.now();
-        Birthday birthday = Birthday.fromString(this.birthday);
+        Birthday birthday = getBirthdayObject();
         LocalDate potentialBirthday = now.withDayOfMonth(birthday.getDay()).withMonthOfYear(birthday.getMonth());
         if (now.isAfter(potentialBirthday)) {
             potentialBirthday = potentialBirthday.plusYears(1);
@@ -82,7 +97,7 @@ public class Contact {
 
 
     public int getNewAge() {
-        Birthday birthday = Birthday.fromString(this.birthday);
+        Birthday birthday = getBirthdayObject();
         int newAge = -1;
         if (birthday.hasYear()) {
             LocalDate nextBirthday = getNextBirthday();
@@ -104,6 +119,41 @@ public class Contact {
         } finally {
             return photo;
         }
+    }
+
+    public String getMessageText(Context context) {
+        Birthday birthday = getBirthdayObject();
+        int daysTillBirthday = daysTillBirthday();
+        String message;
+        if (birthday.hasYear()) {
+            if (daysTillBirthday == 0) {
+                message = context.getString(R.string.birthday_todayAge);
+                message = String.format(message, getDisplayName(), getNewAge());
+            } else if (daysTillBirthday == 1) {
+                message = context.getString(R.string.birthday_tomorrowAge);
+                message = String.format(message, getDisplayName(), getNewAge());
+            } else {
+                message = context.getString(R.string.birthday_daysAge);
+                message = String.format(message, getDisplayName(), getNewAge(), daysTillBirthday);
+            }
+        } else {
+            if (daysTillBirthday == 0) {
+                message = context.getString(R.string.birthday_today);
+                message = String.format(message, getDisplayName());
+            } else if (daysTillBirthday == 1) {
+                message = context.getString(R.string.birthday_tomorrow);
+                message = String.format(message, getDisplayName());
+            } else {
+                message = context.getString(R.string.birthday_days);
+                message = String.format(message, getDisplayName(), daysTillBirthday);
+            }
+        }
+        return message;
+    }
+
+    @Override
+    public int compareTo(Contact another) {
+        return Integer.compare(this.daysTillBirthday(), another.daysTillBirthday());
     }
 
     @Getter
