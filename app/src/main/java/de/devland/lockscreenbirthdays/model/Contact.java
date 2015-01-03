@@ -74,6 +74,7 @@ public class Contact implements Comparable<Contact> {
         while (cursor.moveToNext()) {
             contacts.add(Contact.fromCursor(cursor));
         }
+        cursor.close();
 
         return contacts;
     }
