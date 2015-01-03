@@ -18,11 +18,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver
-            android:name=".ScreenOffReceiver"
-            android:enabled="true"
-            android:exported="true"/>
-
         <service
             android:name=".BirthdayService"
             android:enabled="true"
