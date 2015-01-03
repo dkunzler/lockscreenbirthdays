@@ -61,11 +61,11 @@ public class MainActivity extends Activity {
                         .setSmallIcon(R.drawable.ic_stat_birthday);
                 Notification notif = notificationBuilder.build();
                 // TODO open contact on click
-                // TODO text
-                // Hat heute/morgen Geburtstag!
-                // Hat in x Tagen Geburtstag!
-                // Wird heute/morgen y!
-                // Wird in x Tagen y!
+                // TODO service
+                // TODO BootReceiver
+                // TODO settings
+                // TODO update at 00:00
+                // TODO order
                 notificationManager.notify(contact.getId(), notif);
             }
         }
