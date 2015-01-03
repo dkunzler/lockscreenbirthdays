@@ -42,6 +42,13 @@ public class BirthdayService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(screenOffReceiver);
+        unregisterReceiver(screenOnReceiver);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
     }

@@ -47,9 +47,11 @@ public class MainFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 defaultPrefs.serviceEnabled(isChecked);
+                Intent service = new Intent(getActivity().getApplicationContext(), BirthdayService.class);
                 if (isChecked) {
-                    Intent service = new Intent(getActivity().getApplicationContext(), BirthdayService.class);
                     getActivity().startService(service);
+                } else {
+                    getActivity().stopService(service);
                 }
             }
         });
