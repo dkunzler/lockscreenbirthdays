@@ -6,4 +6,7 @@
     <string name="birthday_todayAge">%1$s wird morgen %2$d!</string>
     <string name="birthday_daysAge">%1$s wird in %3$d Tagen %2$d!</string>
     <string name="birthday_days">%1$s hat in %2$d Tagen Geburtstag!</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="title_feedback">Sende Feedback…</string>
+    <string name="app_name">Lockscreen Birthdays</string>
 </resources>

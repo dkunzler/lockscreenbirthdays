@@ -1,10 +1,12 @@
 package de.devland.lockscreenbirthdays;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
+
+import de.devland.esperandro.Esperandro;
+import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 
 
 public class MainActivity extends Activity {
@@ -18,29 +20,23 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new MainFragment())
                     .commit();
         }
+        Esperandro.getPreferences(DefaultPrefs.class, this).initDefaults();
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            FragmentManager fm = getFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                if (fm.getBackStackEntryCount() == 1) {
+                    getActionBar().setDisplayHomeAsUpEnabled(false);
+                }
+                fm.popBackStack();
+            }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 }

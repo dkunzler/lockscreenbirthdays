@@ -10,9 +10,9 @@ import de.devland.esperandro.annotations.SharedPreferences;
 @SharedPreferences
 public interface DefaultPrefs extends SharedPreferenceActions {
 
-    @Default(ofInt = 2)
-    int maxDaysTillBirthday();
-    void maxDaysTillBirthday(int daysTillBirthday);
+    @Default(ofString = "2")
+    String maxDaysTillBirthday();
+    void maxDaysTillBirthday(String daysTillBirthday);
 
     @Default(ofBoolean = false)
     boolean serviceEnabled();

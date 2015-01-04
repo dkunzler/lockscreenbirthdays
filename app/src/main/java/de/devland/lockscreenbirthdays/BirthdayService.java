@@ -82,7 +82,7 @@ public class BirthdayService extends Service {
             List<Contact> allContactsWithBirthdays = Contact.getAllContactsWithBirthdays(getApplicationContext());
             List<Contact> birthdaysInRange = new ArrayList<>();
             for (Contact contact : allContactsWithBirthdays) {
-                if (contact.daysTillBirthday() < defaultPrefs.maxDaysTillBirthday()) {
+                if (contact.daysTillBirthday() < Integer.parseInt(defaultPrefs.maxDaysTillBirthday())) {
                     birthdaysInRange.add(contact);
                 }
             }

@@ -3,8 +3,8 @@
 
     <string name="app_name">Lockscreen Birthdays</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_feedback">Send Feedback…</string>
 
     <string name="birthday_tomorrow">Tomorrow is %1$s\'s birthday!</string>
     <string name="birthday_today">It\'s %1$s\'s birthday today!</string>
