@@ -9,9 +9,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Contacts;
 import android.provider.ContactsContract;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,15 +40,30 @@ public class BirthdayService extends Service {
 
         registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
 
         // TODO contentobserver
         return START_STICKY;
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getContentResolver().unregisterContentObserver(contactObserver);
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    private ContentObserver contactObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            Toast.makeText(getApplicationContext(), "Contact changed", Toast.LENGTH_SHORT);
+        }
+    };
 
     private BroadcastReceiver screenOnReceiver = new BroadcastReceiver() {
         @Override
