@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toolbar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -44,11 +45,11 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onResume() {
+        super.onResume();
 
-        if (activity.getActionBar() != null) {
-            activity.getActionBar().setTitle(R.string.title_activity_main);
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setTitle(R.string.title_activity_main);
         }
     }
 

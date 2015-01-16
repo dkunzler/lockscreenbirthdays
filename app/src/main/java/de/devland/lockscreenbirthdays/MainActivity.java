@@ -4,12 +4,18 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toolbar;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 
 
 public class MainActivity extends Activity {
+
+    @InjectView(R.id.toolbar)
+    protected Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +27,8 @@ public class MainActivity extends Activity {
                     .commit();
         }
         Esperandro.getPreferences(DefaultPrefs.class, this).initDefaults();
+        ButterKnife.inject(this);
+        setActionBar(toolbar);
     }
 
 
@@ -38,5 +46,18 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            if (fm.getBackStackEntryCount() == 1) {
+                getActionBar().setDisplayHomeAsUpEnabled(false);
+            }
+            fm.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

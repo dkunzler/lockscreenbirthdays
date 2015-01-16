@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
@@ -53,6 +54,7 @@ public class BirthdayService extends Service {
                     registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
                     registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
                     getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
+                    defaultPrefs.registerOnChangeListener(settingsChangeListener);
 
                     updateBirthdays(true);
                 }
@@ -85,6 +87,8 @@ public class BirthdayService extends Service {
         unregisterReceiver(screenOffReceiver);
         unregisterReceiver(screenOnReceiver);
         getContentResolver().unregisterContentObserver(contactObserver);
+        defaultPrefs.unregisterOnChangeListener(settingsChangeListener);
+        isRunning = false;
     }
 
     @Override
@@ -113,6 +117,15 @@ public class BirthdayService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             updateNotifications();
+        }
+    };
+
+    private SharedPreferences.OnSharedPreferenceChangeListener settingsChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("maxDaysTillBirthday")) {
+                updateBirthdays(true);
+            }
         }
     };
 
