@@ -64,7 +64,9 @@ public class MainFragment extends Fragment {
                 defaultPrefs.serviceEnabled(isChecked);
                 Intent service = new Intent(getActivity().getApplicationContext(), BirthdayService.class);
                 if (isChecked) {
-                    getActivity().startService(service);
+                    if (!BirthdayService.isRunning) {
+                        getActivity().startService(service);
+                    }
                 } else {
                     getActivity().stopService(service);
                 }

@@ -13,7 +13,6 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.widget.Toast;
 
@@ -32,15 +31,24 @@ public class BirthdayService extends Service {
 
     private DefaultPrefs defaultPrefs;
 
+    public static volatile boolean isRunning = false;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-        defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, getApplicationContext());
+        if (!isRunning) {
+            synchronized (BirthdayService.class) {
+                if (!isRunning) {
+                    isRunning = true;
+                    notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                    defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, getApplicationContext());
 
-        registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-        registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
+                    registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+                    registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+                    getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
+                }
+            }
+        }
 
         // TODO contentobserver
         return START_STICKY;

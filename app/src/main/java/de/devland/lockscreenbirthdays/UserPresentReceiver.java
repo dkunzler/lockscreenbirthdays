@@ -19,7 +19,7 @@ public class UserPresentReceiver extends BroadcastReceiver {
 
         // if the service was stopped due to memory problems, restart it
         DefaultPrefs defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, context);
-        if (defaultPrefs.serviceEnabled()) {
+        if (defaultPrefs.serviceEnabled() && !BirthdayService.isRunning) {
             Intent service = new Intent(context, BirthdayService.class);
             context.startService(service);
         }
