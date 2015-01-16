@@ -1,5 +1,6 @@
 package de.devland.lockscreenbirthdays;
 
+import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,6 +18,9 @@ import android.provider.Contacts;
 import android.provider.ContactsContract;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +36,12 @@ public class BirthdayService extends Service {
 
     private DefaultPrefs defaultPrefs;
 
+    private List<Contact> allContactsWithBirthdays;
+    private List<Contact> birthdaysInRange;
+
+    private DateTime lastNotificationUpdate = new DateTime();
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -42,8 +52,24 @@ public class BirthdayService extends Service {
         registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
         getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
 
+        updateBirthdays(true);
+
         // TODO contentobserver
         return START_STICKY;
+    }
+
+    private void updateBirthdays(boolean reload) {
+        if (reload || allContactsWithBirthdays == null) {
+            this.allContactsWithBirthdays = Contact.getAllContactsWithBirthdays(
+                    getApplicationContext());
+        }
+        this.birthdaysInRange = new ArrayList<>();
+        for (Contact contact : allContactsWithBirthdays) {
+            if (contact.daysTillBirthday() < Integer.parseInt(defaultPrefs.maxDaysTillBirthday())) {
+                birthdaysInRange.add(contact);
+            }
+        }
+        Collections.sort(birthdaysInRange);
     }
 
     @Override
@@ -63,7 +89,7 @@ public class BirthdayService extends Service {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
-            Toast.makeText(getApplicationContext(), "Contact changed", Toast.LENGTH_SHORT);
+            updateBirthdays(true);
         }
     };
 
@@ -79,36 +105,31 @@ public class BirthdayService extends Service {
     private BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            List<Contact> allContactsWithBirthdays = Contact.getAllContactsWithBirthdays(getApplicationContext());
-            List<Contact> birthdaysInRange = new ArrayList<>();
-            for (Contact contact : allContactsWithBirthdays) {
-                if (contact.daysTillBirthday() < Integer.parseInt(defaultPrefs.maxDaysTillBirthday())) {
-                    birthdaysInRange.add(contact);
-                }
-            }
-
-            Collections.sort(birthdaysInRange);
-
-            for (Contact contact : birthdaysInRange) {
-                Intent contactIntent = new Intent(Intent.ACTION_VIEW);
-                Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(contact.getId()));
-                contactIntent.setData(uri);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), contact.getId(), contactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
-                notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
-                        .setContentTitle(contact.getDisplayName())
-                        .setContentText(contact.getMessageText(getApplicationContext()))
-                        .setPriority(Notification.PRIORITY_MAX)
-                        .setShowWhen(false)
-                        .setContentIntent(pendingIntent)
-                        .setSmallIcon(R.drawable.ic_stat_birthday);
-                Notification notif = notificationBuilder.build();
-                // TODO settings
-                // TODO update at 00:00
-                // TODO order
-                notificationManager.notify(contact.getId(), notif);
-            }
+            updateNotifications();
         }
     };
+
+    private void updateNotifications() {
+        lastNotificationUpdate = new DateTime();
+        for (Contact contact : birthdaysInRange) {
+            Intent contactIntent = new Intent(Intent.ACTION_VIEW);
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(contact.getId()));
+            contactIntent.setData(uri);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), contact.getId(), contactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+            notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
+                    .setContentTitle(contact.getDisplayName())
+                    .setContentText(contact.getMessageText(getApplicationContext()))
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setShowWhen(false)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_stat_birthday);
+            Notification notif = notificationBuilder.build();
+            // TODO update at 00:00
+            // TODO order
+            notificationManager.notify(contact.getId(), notif);
+        }
+    }
+
 }
