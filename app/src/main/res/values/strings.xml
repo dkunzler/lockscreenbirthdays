@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Lockscreen Birthdays</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Birthdays</string>
     <string name="action_settings">Settings</string>
     <string name="title_feedback">Send Feedback…</string>
 

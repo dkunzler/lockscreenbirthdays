@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,9 +16,14 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toolbar;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import de.devland.esperandro.Esperandro;
+import de.devland.lockscreenbirthdays.model.Contact;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 import de.devland.lockscreenbirthdays.prefs.SettingsFragment;
 
@@ -27,6 +34,8 @@ public class MainFragment extends Fragment {
 
     @InjectView(R.id.serviceSwitch)
     protected Switch serviceSwitch;
+    @InjectView(R.id.birthdayList)
+    protected RecyclerView birthdayList;
     private DefaultPrefs defaultPrefs;
 
     @Override
@@ -57,6 +66,11 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.inject(this, getActivity());
+
+        birthdayList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        List<Contact> birthdays = Contact.getAllContactsWithBirthdays(getActivity());
+        Collections.sort(birthdays);
+        birthdayList.setAdapter(new BirthdayAdapter(getActivity(), birthdays));
 
         serviceSwitch.setChecked(defaultPrefs.serviceEnabled());
         serviceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

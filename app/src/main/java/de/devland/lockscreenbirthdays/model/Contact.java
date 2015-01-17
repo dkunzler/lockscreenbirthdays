@@ -31,6 +31,8 @@ public class Contact implements Comparable<Contact> {
     private String birthday;
     private Birthday birthdayObject;
 
+    private Bitmap contactPhoto;
+
     public void setBirthday(String birthday) {
         this.birthday = birthday;
         this.birthdayObject = Birthday.fromString(birthday);
@@ -55,7 +57,7 @@ public class Contact implements Comparable<Contact> {
         Uri uri = ContactsContract.Data.CONTENT_URI;
         List<Contact> contacts = new ArrayList<>();
 
-        String[] projection = new String[] {
+        String[] projection = new String[]{
                 ContactsContract.Contacts.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Event.CONTACT_ID,
                 ContactsContract.CommonDataKinds.Event.START_DATE,
@@ -66,7 +68,7 @@ public class Contact implements Comparable<Contact> {
                 ContactsContract.Data.MIMETYPE + "= ? AND " +
                         ContactsContract.CommonDataKinds.Event.TYPE + "=" +
                         ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY;
-        String[] selectionArgs = new String[] {
+        String[] selectionArgs = new String[]{
                 ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE
         };
         String sortOrder = null;
@@ -109,15 +111,18 @@ public class Contact implements Comparable<Contact> {
     }
 
     public Bitmap getContactBitmap(Context context) {
-        Bitmap photo = null;
+        Bitmap photo = contactPhoto;
         try {
-            if (photoUri != null) {
-                InputStream input = context.getContentResolver().openInputStream(Uri.parse(photoUri));
-                if (input != null) {
-                    photo = BitmapFactory.decodeStream(input);
+            if (photo == null) {
+                if (photoUri != null) {
+                    InputStream input = context.getContentResolver().openInputStream(Uri.parse(photoUri));
+                    if (input != null) {
+                        photo = BitmapFactory.decodeStream(input);
+                    }
                 }
             }
         } finally {
+            contactPhoto = photo;
             return photo;
         }
     }
