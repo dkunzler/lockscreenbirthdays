@@ -14,9 +14,11 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.provider.ContactsContract;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +32,7 @@ public class BirthdayService extends Service {
 
     private NotificationManager notificationManager;
     private KeyguardManager keyguardManager;
+    private PowerManager powerManager;
 
     private DefaultPrefs defaultPrefs;
 
@@ -49,6 +52,7 @@ public class BirthdayService extends Service {
                     isRunning = true;
                     notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                    powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
                     defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, getApplicationContext());
 
                     registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
@@ -57,6 +61,9 @@ public class BirthdayService extends Service {
                     defaultPrefs.registerOnChangeListener(settingsChangeListener);
 
                     updateBirthdays(true);
+                    if (!powerManager.isInteractive()) {
+                        updateNotifications();
+                    }
                 }
             }
         }
@@ -109,6 +116,11 @@ public class BirthdayService extends Service {
         public void onReceive(Context context, Intent intent) {
             if (!keyguardManager.inKeyguardRestrictedInputMode()) {
                 notificationManager.cancelAll();
+            } else {
+                if (lastNotificationUpdate.isBefore(new LocalDate().toDateTimeAtStartOfDay())) {
+                    updateBirthdays(false);
+                    updateNotifications();
+                }
             }
         }
     };
@@ -146,8 +158,6 @@ public class BirthdayService extends Service {
                     .setContentIntent(pendingIntent)
                     .setSmallIcon(R.drawable.ic_stat_birthday);
             Notification notif = notificationBuilder.build();
-            // TODO update at 00:00
-            // TODO order
             notificationManager.notify(contact.getId(), notif);
         }
     }
