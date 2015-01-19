@@ -73,9 +73,9 @@ public class BirthdayAdapter extends RecyclerView.Adapter {
         ViewHolder vh = (ViewHolder) viewHolder;
         String photoUri = contact.getPhotoUri();
         if (photoUri != null) {
-            picasso.load(Uri.parse(photoUri)).into(vh.contactImage);
+            picasso.load(Uri.parse(photoUri)).placeholder(R.drawable.ic_action_account_circle).into(vh.contactImage);
         } else {
-            picasso.load(R.drawable.ic_account_default).into(vh.contactImage);
+            picasso.load(R.drawable.ic_action_account_circle).noPlaceholder().into(vh.contactImage);
         }
         vh.name.setText(contact.getDisplayName());
         vh.message.setText(contact.getMessageText(context));
