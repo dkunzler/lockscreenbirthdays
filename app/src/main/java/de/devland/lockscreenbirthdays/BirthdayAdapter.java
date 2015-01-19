@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pkmmte.view.CircularImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ import lombok.Setter;
 /**
  * Created by David Kunzler on 17.01.2015.
  */
-@AllArgsConstructor(suppressConstructorProperties = true)
 public class BirthdayAdapter extends RecyclerView.Adapter {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,10 +47,18 @@ public class BirthdayAdapter extends RecyclerView.Adapter {
     }
 
     private Context context;
+    private Picasso picasso;
 
     @Getter
     @Setter
     protected List<Contact> birthdays;
+
+    public BirthdayAdapter(Context context, List<Contact> birthdays) {
+        this.context = context;
+        this.birthdays = birthdays;
+        picasso = Picasso.with(context);
+    }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -65,9 +73,9 @@ public class BirthdayAdapter extends RecyclerView.Adapter {
         ViewHolder vh = (ViewHolder) viewHolder;
         String photoUri = contact.getPhotoUri();
         if (photoUri != null) {
-            vh.contactImage.setImageURI(Uri.parse(photoUri));
+            picasso.load(Uri.parse(photoUri)).into(vh.contactImage);
         } else {
-            vh.contactImage.setImageResource(R.drawable.ic_account_default);
+            picasso.load(R.drawable.ic_account_default).into(vh.contactImage);
         }
         vh.name.setText(contact.getDisplayName());
         vh.message.setText(contact.getMessageText(context));
