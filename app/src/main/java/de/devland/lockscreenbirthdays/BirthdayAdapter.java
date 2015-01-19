@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.pkmmte.view.CircularImageView;
 
@@ -30,7 +32,11 @@ public class BirthdayAdapter extends RecyclerView.Adapter {
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @InjectView(R.id.image_contact)
-        public CircularImageView contactImage;
+        public ImageView contactImage;
+        @InjectView(R.id.textView_message)
+        public TextView message;
+        @InjectView(R.id.textView_name)
+        public TextView name;
         public View itemView;
 
         public ViewHolder(View itemView) {
@@ -63,6 +69,8 @@ public class BirthdayAdapter extends RecyclerView.Adapter {
         } else {
             vh.contactImage.setImageResource(R.drawable.ic_account_default);
         }
+        vh.name.setText(contact.getDisplayName());
+        vh.message.setText(contact.getMessageText(context));
         vh.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

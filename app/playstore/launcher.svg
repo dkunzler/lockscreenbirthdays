@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="New document 1">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="-120.56225"
+     inkscape:cy="579.64073"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1600"
+     inkscape:window-height="842"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:#3f51b5;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="m 223.55135,429.5 c -25.32571,0 -45.6875,20.39304 -45.6875,45.71875 l 0,14.28125 320,0 0,-14.28125 C 497.86385,449.89304 477.47081,429.5 452.1451,429.5 l -228.59375,0 z"
+       id="path3769"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/deekay/cake.png"
+       inkscape:export-xdpi="104.7742"
+       inkscape:export-ydpi="104.7742" />
+    <rect
+       ry="10.714286"
+       y="543.2373"
+       x="177.86385"
+       height="65.714287"
+       width="320"
+       id="rect3771"
+       style="fill:#3f51b5;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       inkscape:export-filename="/home/deekay/cake.png"
+       inkscape:export-xdpi="104.7742"
+       inkscape:export-ydpi="104.7742" />
+    <rect
+       ry="16.094891"
+       y="611.505"
+       x="138.57812"
+       height="33.427853"
+       width="398.57144"
+       id="rect3773"
+       style="fill:#00bfa5;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       inkscape:export-filename="/home/deekay/cake.png"
+       inkscape:export-xdpi="104.7742"
+       inkscape:export-ydpi="104.7742" />
+    <rect
+       style="fill:#3f51b5;fill-opacity:1;stroke:none"
+       id="rect3775"
+       width="68.651932"
+       height="130"
+       x="303.53787"
+       y="295.64792"
+       ry="8.125"
+       inkscape:export-filename="/home/deekay/cake.png"
+       inkscape:export-xdpi="104.7742"
+       inkscape:export-ydpi="104.7742" />
+    <rect
+       style="fill:#00bfa5;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3762"
+       width="320"
+       height="65.714287"
+       x="177.86385"
+       y="489.50504"
+       ry="0"
+       inkscape:export-filename="/home/deekay/cake.png"
+       inkscape:export-xdpi="104.7742"
+       inkscape:export-ydpi="104.7742" />
+    <path
+       style="fill:#d45143;fill-opacity:1;stroke:none"
+       d="m 308.81493,245.38055 c 0.57619,-23.74424 37.14265,-62.29238 37.14265,-62.29238 0,0 -5.48701,34.51602 -0.11336,50.63582 3.66736,11.00145 20.88866,16.92415 21.07871,28.44214 0.16804,10.18369 -8.292,20.63243 -17.79837,25.66863 -5.01802,2.65839 -12.34434,3.34279 -17.30778,0.59695 -14.79792,-8.18642 -23.39068,-27.02674 -23.00182,-43.05116 z"
+       id="path3786"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="acaaaaa"
+       inkscape:export-filename="/home/deekay/cake.png"
+       inkscape:export-xdpi="104.7742"
+       inkscape:export-ydpi="104.7742" />
+  </g>
+</svg>
