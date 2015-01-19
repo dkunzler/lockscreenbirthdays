@@ -68,9 +68,6 @@ public class BirthdayService extends Service {
             }
         }
 
-        
-
-        // TODO contentobserver
         return START_STICKY;
     }
 
@@ -143,6 +140,7 @@ public class BirthdayService extends Service {
 
     private void updateNotifications() {
         lastNotificationUpdate = new DateTime();
+        notificationManager.cancelAll();
         for (Contact contact : birthdaysInRange) {
             Intent contactIntent = new Intent(Intent.ACTION_VIEW);
             Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(contact.getId()));
