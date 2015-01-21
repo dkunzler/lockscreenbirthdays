@@ -10,4 +10,5 @@
     <string name="title_feedback">Sende Feedback…</string>
     <string name="app_name">Lockscreen Birthdays</string>
     <string name="title_activity_main">Geburtstage</string>
+    <string name="opensourceLicensesTitle">Open-Source-Lizenzen</string>
 </resources>

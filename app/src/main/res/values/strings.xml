@@ -5,6 +5,7 @@
     <string name="title_activity_main">Birthdays</string>
     <string name="action_settings">Settings</string>
     <string name="title_feedback">Send Feedback…</string>
+    <string name="opensourceLicensesTitle">Open-Source-Licenses</string>
 
     <string name="birthday_tomorrow">Tomorrow is %1$s\'s birthday!</string>
     <string name="birthday_today">It\'s %1$s\'s birthday today!</string>

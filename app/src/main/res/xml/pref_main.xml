@@ -5,4 +5,7 @@
         android:inputType="number"
         android:key="maxDaysTillBirthday" />
     <de.devland.lockscreenbirthdays.prefs.FeedbackPreference android:title="@string/title_feedback" />
+    <de.devland.masterpassword.ui.preferences.InformationDialogPreference
+        content="raw/licenses"
+        android:title="@string/opensourceLicensesTitle" />
 </PreferenceScreen>
