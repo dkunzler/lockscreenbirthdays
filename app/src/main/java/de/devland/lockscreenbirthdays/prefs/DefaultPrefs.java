@@ -17,4 +17,8 @@ public interface DefaultPrefs extends SharedPreferenceActions {
     @Default(ofBoolean = false)
     boolean serviceEnabled();
     void serviceEnabled(boolean serviceEnabled);
+
+    @Default(ofBoolean = false)
+    boolean serviceShowcased();
+    void serviceShowcased(boolean serviceShowcased);
 }

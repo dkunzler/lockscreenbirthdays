@@ -11,4 +11,6 @@
     <string name="app_name">Lockscreen Birthdays</string>
     <string name="title_activity_main">Geburtstage</string>
     <string name="opensourceLicensesTitle">Open-Source-Lizenzen</string>
+    <string name="showcase_serviceText">Aktiviere den Dienst um Geburtstage auf dem Sperrbildschirm anzuzeigen</string>
+    <string name="showcase_serviceTitle">Sperrbildschirm</string>
 </resources>

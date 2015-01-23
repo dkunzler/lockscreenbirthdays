@@ -50,7 +50,11 @@ public class Contact implements Comparable<Contact> {
         contact.displayName = cursor.getString(nameColumn);
         contact.photoUri = cursor.getString(photoColumn);
 
-        return contact;
+        if (contact.getBirthdayObject().isCorrectBirthday()) {
+            return contact;
+        } else {
+            return null;
+        }
     }
 
     public static List<Contact> getAllContactsWithBirthdays(Context context) {
@@ -74,7 +78,10 @@ public class Contact implements Comparable<Contact> {
         String sortOrder = null;
         Cursor cursor = context.getContentResolver().query(uri, projection, where, selectionArgs, sortOrder);
         while (cursor.moveToNext()) {
-            contacts.add(Contact.fromCursor(cursor));
+            Contact contact = Contact.fromCursor(cursor);
+            if (contact != null) {
+                contacts.add(contact);
+            }
         }
         cursor.close();
 
@@ -187,6 +194,10 @@ public class Contact implements Comparable<Contact> {
 
         public boolean hasYear() {
             return year != -1;
+        }
+
+        public boolean isCorrectBirthday() {
+            return day != 0 && month != 0;
         }
 
         public LocalDate toLocalDate() {

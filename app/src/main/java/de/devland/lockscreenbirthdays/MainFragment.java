@@ -16,6 +16,9 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toolbar;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +29,7 @@ import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.model.Contact;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 import de.devland.lockscreenbirthdays.prefs.SettingsFragment;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Created by David Kunzler on 03.01.2015.
@@ -87,6 +91,21 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+
+        if (!defaultPrefs.serviceShowcased()) {
+            try {
+                ShowcaseView.Builder showCaseBuilder = new ShowcaseView.Builder(getActivity(), true);
+                showCaseBuilder.hideOnTouchOutside().setContentTitle(R.string.showcase_serviceTitle)
+                        .setStyle(R.style.ShowcaseLightTheme)
+                        .setContentText(R.string.showcase_serviceText)
+                        .hideOnTouchOutside()
+                        .setTarget(new ViewTarget(serviceSwitch));
+                showCaseBuilder.build().show();
+            } catch (Exception e) {
+            } finally {
+                defaultPrefs.serviceShowcased(true);
+            }
+        }
     }
 
     @Override

@@ -14,4 +14,7 @@
     <string name="birthday_daysAge">%1$s gets %2$d in %3$d days!</string>
     <string name="birthday_days">It\'s %1$s\'s birthday in %2$d days!</string>
 
+    <string name="showcase_serviceTitle">Lockscreen</string>
+    <string name="showcase_serviceText">Enable the service to show birthdays on your lockscreen.</string>
+
 </resources>
