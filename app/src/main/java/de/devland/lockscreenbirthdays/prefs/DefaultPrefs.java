@@ -21,4 +21,7 @@ public interface DefaultPrefs extends SharedPreferenceActions {
     @Default(ofBoolean = false)
     boolean serviceShowcased();
     void serviceShowcased(boolean serviceShowcased);
+
+    String donation();
+    void donation(String donation);
 }

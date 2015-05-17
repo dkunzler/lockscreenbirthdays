@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <de.devland.lockscreenbirthdays.prefs.BeerPreference
+        android:key="donation"
+        android:title="@string/title_beer"
+        android:summary="@string/summary_beer"
+        android:entries="@array/donationValues"
+        android:entryValues="@array/donationEntries"/>
+</PreferenceScreen>

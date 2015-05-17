@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
-        android:title="DaysTillBirthday"
+        android:title="@string/title_daysTillBirthday"
         android:inputType="number"
         android:key="maxDaysTillBirthday" />
     <de.devland.lockscreenbirthdays.prefs.FeedbackPreference android:title="@string/title_feedback" />
-    <de.devland.masterpassword.ui.preferences.InformationDialogPreference
+    <de.devland.lockscreenbirthdays.prefs.InformationDialogPreference
         content="raw/licenses"
         android:title="@string/opensourceLicensesTitle" />
 </PreferenceScreen>

@@ -13,4 +13,14 @@
     <string name="opensourceLicensesTitle">Open-Source-Lizenzen</string>
     <string name="showcase_serviceText">Aktiviere den Dienst um Geburtstage auf dem Sperrbildschirm anzuzeigen</string>
     <string name="showcase_serviceTitle">Sperrbildschirm</string>
+    <string name="title_beer">Kauf mir ein Bier…</string>
+    <string name="summary_beer">Du kannst meine Arbeit unterstützen in dem du einen kleinen Betrag spendest.</string>
+    <string name="summary_daysTillBirthday">…%1$s Tage vor dem Geburtstag.</string>
+    <string name="title_daysTillBirthday">Zeige Benachrichtigung…</string>
+
+    <array name="donationValues">
+        <item>Ein Kaffee</item>
+        <item>Ein Bier</item>
+        <item>Ein Cocktail</item>
+    </array>
 </resources>

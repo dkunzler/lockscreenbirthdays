@@ -50,14 +50,17 @@ public class BirthdayService extends Service {
             synchronized (BirthdayService.class) {
                 if (!isRunning) {
                     isRunning = true;
-                    notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager = (NotificationManager) getSystemService(
+                            Context.NOTIFICATION_SERVICE);
                     keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
                     powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                    defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, getApplicationContext());
+                    defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class,
+                            getApplicationContext());
 
                     registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
                     registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
-                    getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
+                    getContentResolver().registerContentObserver(
+                            ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
                     defaultPrefs.registerOnChangeListener(settingsChangeListener);
 
                     updateBirthdays(true);
@@ -115,7 +118,7 @@ public class BirthdayService extends Service {
                 notificationManager.cancelAll();
             } else {
                 if (lastNotificationUpdate.isBefore(new LocalDate().toDateTimeAtStartOfDay())) {
-                    updateBirthdays(false);
+                    updateBirthdays(true);
                     updateNotifications();
                 }
             }
@@ -143,18 +146,21 @@ public class BirthdayService extends Service {
         notificationManager.cancelAll();
         for (Contact contact : birthdaysInRange) {
             Intent contactIntent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(contact.getId()));
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,
+                    String.valueOf(contact.getId()));
             contactIntent.setData(uri);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), contact.getId(), contactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+                    contact.getId(), contactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            Notification.Builder notificationBuilder = new Notification.Builder(getApplicationContext());
+            Notification.Builder notificationBuilder = new Notification.Builder(
+                    getApplicationContext());
             notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
-                    .setContentTitle(contact.getDisplayName())
-                    .setContentText(contact.getMessageText(getApplicationContext()))
-                    .setPriority(Notification.PRIORITY_MAX)
-                    .setShowWhen(false)
-                    .setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.ic_stat_birthday);
+                               .setContentTitle(contact.getDisplayName())
+                               .setContentText(contact.getMessageText(getApplicationContext()))
+                               .setPriority(Notification.PRIORITY_MAX)
+                               .setShowWhen(false)
+                               .setContentIntent(pendingIntent)
+                               .setSmallIcon(R.drawable.ic_stat_birthday);
             Notification notif = notificationBuilder.build();
             notificationManager.notify(contact.getId(), notif);
         }

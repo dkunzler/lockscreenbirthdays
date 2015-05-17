@@ -97,8 +97,9 @@ public class Contact implements Comparable<Contact> {
 
     private LocalDate getNextBirthday() {
         LocalDate now = LocalDate.now();
+
         Birthday birthday = getBirthdayObject();
-        LocalDate potentialBirthday = now.withDayOfMonth(birthday.getDay()).withMonthOfYear(birthday.getMonth());
+        LocalDate potentialBirthday = new LocalDate(now.getYear(), birthday.getMonth(), birthday.getDay());
         if (now.isAfter(potentialBirthday)) {
             potentialBirthday = potentialBirthday.plusYears(1);
         }
@@ -203,7 +204,7 @@ public class Contact implements Comparable<Contact> {
         public LocalDate toLocalDate() {
             LocalDate date = null;
             if (hasYear()) {
-                date = LocalDate.now().withDayOfMonth(day).withMonthOfYear(month).withYear(year);
+                date = new LocalDate(year, month, day);
             }
             return date;
         }
