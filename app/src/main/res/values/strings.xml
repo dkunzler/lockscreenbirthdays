@@ -18,8 +18,8 @@
     <string name="showcase_serviceTitle">Lockscreen</string>
     <string name="showcase_serviceText">Enable the service to show birthdays on your lockscreen.</string>
     <string name="summary_beer">You can support my work by donating a small amount.</string>
-    <string name="summary_daysTillBirthday">…%1$s days before birthday.</string>
-    <string name="title_daysTillBirthday">Show notification…</string>
+    <string name="summary_daysTillBirthday">{0,choice,0#…on birthday.|1#…one day before birthday.|1&lt;…{0} days before birthday.}</string>
+    <string name="title_daysTillBirthday">Show a notification…</string>
 
     <array name="donationValues">
         <item>A coffee</item>

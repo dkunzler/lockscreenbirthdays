@@ -7,6 +7,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
+import java.text.MessageFormat;
+
 import de.devland.lockscreenbirthdays.R;
 import de.devland.lockscreenbirthdays.util.IabHelper;
 import de.devland.lockscreenbirthdays.util.IabResult;
@@ -79,8 +81,10 @@ public class SettingsFragment extends PreferenceFragment implements
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-            } if (preference.getKey().equals("maxDaysTillBirthday")) {
-                String summary = getActivity().getResources().getString(R.string.summary_daysTillBirthday, value);
+            }
+            if (preference.getKey().equals("maxDaysTillBirthday")) {
+                String format = getActivity().getResources().getString(R.string.summary_daysTillBirthday);
+                String summary = MessageFormat.format(format, Integer.parseInt(stringValue));
                 preference.setSummary(summary);
             } else {
                 // For all other preferences, set the summary to the value's

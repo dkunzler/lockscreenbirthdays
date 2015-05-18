@@ -81,7 +81,7 @@ public class BirthdayService extends Service {
         }
         this.birthdaysInRange = new ArrayList<>();
         for (Contact contact : allContactsWithBirthdays) {
-            if (contact.daysTillBirthday() < Integer.parseInt(defaultPrefs.maxDaysTillBirthday())) {
+            if (contact.daysTillBirthday() <= Integer.parseInt(defaultPrefs.maxDaysTillBirthday())) {
                 birthdaysInRange.add(contact);
             }
         }
