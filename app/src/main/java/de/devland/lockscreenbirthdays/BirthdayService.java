@@ -160,7 +160,7 @@ public class BirthdayService extends Service {
                                .setPriority(Notification.PRIORITY_MAX)
                                .setShowWhen(false)
                                .setContentIntent(pendingIntent)
-                               .setSmallIcon(R.drawable.ic_stat_birthday);
+                               .setSmallIcon(R.drawable.ic_stat_torte_notif);
             Notification notif = notificationBuilder.build();
             notificationManager.notify(contact.getId(), notif);
         }
