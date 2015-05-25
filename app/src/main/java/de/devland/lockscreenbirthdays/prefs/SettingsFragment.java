@@ -34,7 +34,7 @@ public class SettingsFragment extends PreferenceFragment implements
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 Icon icon = Icon.valueOf(newValue.toString());
-                icon.set(getActivity().getPackageManager());
+                icon.set();
                 return true;
             }
         });

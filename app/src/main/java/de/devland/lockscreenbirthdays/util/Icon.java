@@ -22,10 +22,12 @@ public enum Icon {
     @Getter
     private final int notificationIconId;
 
-    public void set(PackageManager packageManager) {
+    public void set() {
+        App app = App.getInstance();
+        PackageManager packageManager = app.getPackageManager();
         for (Icon icon : Icon.values()) {
             packageManager.setComponentEnabledSetting(
-                    new ComponentName(App.getInstance(), App.getInstance().getPackageName() + icon.activityName),
+                    new ComponentName(app, app.getPackageName() + icon.activityName),
                     this == icon ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                     PackageManager.DONT_KILL_APP);
         }

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
+import de.devland.lockscreenbirthdays.util.Icon;
 
 
 /**
@@ -22,6 +23,7 @@ public class App extends Application {
         instance = this;
         DefaultPrefs defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, this);
         defaultPrefs.initDefaults();
+        Icon.valueOf(defaultPrefs.icon()).set();
     }
 
 }
