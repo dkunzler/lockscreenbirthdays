@@ -12,6 +12,7 @@ import java.text.MessageFormat;
 import de.devland.lockscreenbirthdays.R;
 import de.devland.lockscreenbirthdays.util.IabHelper;
 import de.devland.lockscreenbirthdays.util.IabResult;
+import de.devland.lockscreenbirthdays.util.Icon;
 
 /**
  * Created by David Kunzler on 04.01.2015.
@@ -29,6 +30,14 @@ public class SettingsFragment extends PreferenceFragment implements
 
         addPreferencesFromResource(R.xml.pref_main);
         bindPreferenceSummaryToValue(findPreference("maxDaysTillBirthday"));
+        findPreference("icon").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                Icon icon = Icon.valueOf(newValue.toString());
+                icon.set(getActivity().getPackageManager());
+                return true;
+            }
+        });
     }
 
     @Override
@@ -56,8 +65,8 @@ public class SettingsFragment extends PreferenceFragment implements
     @Override
     public void onIabSetupFinished(IabResult result) {
         if (result.isSuccess()) {
-            addPreferencesFromResource(R.xml.pref_iab);
-            BeerPreference donationPreference = (BeerPreference) findPreference("donation");
+//            addPreferencesFromResource(R.xml.pref_iab);
+//            BeerPreference donationPreference = (BeerPreference) findPreference("donation");
         }
     }
 

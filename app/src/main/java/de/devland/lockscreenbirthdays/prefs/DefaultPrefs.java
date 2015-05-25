@@ -3,6 +3,7 @@ package de.devland.lockscreenbirthdays.prefs;
 import de.devland.esperandro.SharedPreferenceActions;
 import de.devland.esperandro.annotations.Default;
 import de.devland.esperandro.annotations.SharedPreferences;
+import de.devland.lockscreenbirthdays.util.Icon;
 
 /**
  * Created by David Kunzler on 03.01.2015.
@@ -24,4 +25,8 @@ public interface DefaultPrefs extends SharedPreferenceActions {
 
     String donation();
     void donation(String donation);
+
+    @Default(ofString = "MATERIAL_CAKE")
+    String icon();
+    void icon(String icon);
 }

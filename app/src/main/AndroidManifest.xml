@@ -6,6 +6,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_material_cake"
         android:label="@string/app_name"
@@ -26,7 +27,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main"/>
 
         <activity-alias
             android:name=".launcher.MaterialCupcake"

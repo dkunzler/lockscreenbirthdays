@@ -27,6 +27,7 @@ import java.util.List;
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.model.Contact;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
+import de.devland.lockscreenbirthdays.util.Icon;
 
 public class BirthdayService extends Service {
 
@@ -154,13 +155,14 @@ public class BirthdayService extends Service {
 
             Notification.Builder notificationBuilder = new Notification.Builder(
                     getApplicationContext());
+            Icon icon = Icon.valueOf(defaultPrefs.icon());
             notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
                                .setContentTitle(contact.getDisplayName())
                                .setContentText(contact.getMessageText(getApplicationContext()))
                                .setPriority(Notification.PRIORITY_MAX)
                                .setShowWhen(false)
                                .setContentIntent(pendingIntent)
-                               .setSmallIcon(R.drawable.ic_stat_torte_notif);
+                               .setSmallIcon(icon.getNotificationIconId());
             Notification notif = notificationBuilder.build();
             notificationManager.notify(contact.getId(), notif);
         }

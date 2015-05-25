@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="donationEntries">
+    <string-array translatable="false" name="donationEntries">
         <item>small_donation</item>
         <item>medium_donation</item>
         <item>large_donation</item>
-    </array>
+    </string-array>
+
+    <string-array translatable="false" name="iconEntries">
+        <item>MATERIAL_CAKE</item>
+        <item>MATERIAL_CUPCAKE</item>
+        <item>CAKE</item>
+        <item>CUPCAKE</item>
+    </string-array>
 </resources>

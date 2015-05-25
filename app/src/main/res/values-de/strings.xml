@@ -22,4 +22,11 @@
         <item>Ein Bier</item>
         <item>Ein Cocktail</item>
     </array>
+
+    <string-array name="iconValues">
+        <item>Material Cake</item>
+        <item>Material Cupcake</item>
+        <item>Cake</item>
+        <item>Cupcake</item>
+    </string-array>
 </resources>

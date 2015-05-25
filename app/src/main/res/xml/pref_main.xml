@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
-        android:title="@string/title_daysTillBirthday"
         android:inputType="number"
-        android:key="maxDaysTillBirthday" />
+        android:key="maxDaysTillBirthday"
+        android:title="@string/title_daysTillBirthday" />
+    <ListPreference
+        android:entries="@array/iconValues"
+        android:entryValues="@array/iconEntries"
+        android:key="icon"
+        android:title="Icon" />
     <de.devland.lockscreenbirthdays.prefs.FeedbackPreference android:title="@string/title_feedback" />
     <de.devland.lockscreenbirthdays.prefs.InformationDialogPreference
         content="raw/licenses"
