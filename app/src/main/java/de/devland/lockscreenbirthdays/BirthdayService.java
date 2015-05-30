@@ -87,6 +87,7 @@ public class BirthdayService extends Service {
             }
         }
         Collections.sort(birthdaysInRange);
+        Collections.reverse(birthdaysInRange);
     }
 
     @Override

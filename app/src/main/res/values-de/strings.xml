@@ -18,11 +18,11 @@
     <string name="summary_daysTillBirthday">{0,choice,0#…am Geburtstag.|1#…einen Tag vor dem Geburtstag.|1&lt;…{0} Tage vor dem Geburtstag.}</string>
     <string name="title_daysTillBirthday">Zeige eine Benachrichtigung…</string>
     <string name="title_icon">App Icon</string>
-    <array name="donationValues">
+    <string-array name="donationValues">
         <item>Ein Kaffee</item>
         <item>Ein Bier</item>
         <item>Ein Cocktail</item>
-    </array>
+    </string-array>
 
     <string-array name="iconNames">
         <item>Material Cake</item>

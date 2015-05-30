@@ -10,9 +10,9 @@
 
     <string name="birthday_tomorrow">Tomorrow is %1$s\'s birthday!</string>
     <string name="birthday_today">It\'s %1$s\'s birthday today!</string>
-    <string name="birthday_tomorrowAge">%1$s gets %2$d tomorrow!</string>
-    <string name="birthday_todayAge">%1$s gets %2$d today!</string>
-    <string name="birthday_daysAge">%1$s gets %2$d in %3$d days!</string>
+    <string name="birthday_tomorrowAge">%1$s turns %2$d tomorrow!</string>
+    <string name="birthday_todayAge">%1$s turns %2$d today!</string>
+    <string name="birthday_daysAge">%1$s turns %2$d in %3$d days!</string>
     <string name="birthday_days">It\'s %1$s\'s birthday in %2$d days!</string>
 
     <string name="showcase_serviceTitle">Lockscreen</string>
