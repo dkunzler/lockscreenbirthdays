@@ -12,6 +12,6 @@
         android:title="@string/title_daysTillBirthday" />
     <de.devland.lockscreenbirthdays.prefs.FeedbackPreference android:title="@string/title_feedback" />
     <de.devland.lockscreenbirthdays.prefs.InformationDialogPreference
-        content="raw/licenses"
-        android:title="@string/opensourceLicensesTitle" />
+        content="raw/credits"
+        android:title="@string/creditsTitle" />
 </PreferenceScreen>

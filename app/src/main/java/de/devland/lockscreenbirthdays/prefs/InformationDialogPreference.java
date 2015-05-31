@@ -3,8 +3,10 @@ package de.devland.lockscreenbirthdays.prefs;
 import android.content.Context;
 import android.content.res.Resources;
 import android.preference.DialogPreference;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -32,7 +34,9 @@ public class InformationDialogPreference extends DialogPreference {
         webview.setHorizontalScrollbarOverlay(true);
         webview.setHorizontalScrollBarEnabled(true);
         webview.loadDataWithBaseURL(null, addXmlUtf8Header(content), "text/html", null, null);
+
         builder.setTitle(getTitle()).setCancelable(false).setPositiveButton(0x104000a, null).setView(webview);
+
         super.onPrepareDialogBuilder(builder);
     }
 
