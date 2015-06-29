@@ -16,16 +16,20 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.ContactsContract;
+import android.util.SparseArray;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.model.Contact;
+import de.devland.lockscreenbirthdays.prefs.ActionPrefs;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 import de.devland.lockscreenbirthdays.util.Icon;
 
@@ -36,6 +40,7 @@ public class BirthdayService extends Service {
     private PowerManager powerManager;
 
     private DefaultPrefs defaultPrefs;
+    private ActionPrefs actionPrefs;
 
     public static volatile boolean isRunning = false;
 
@@ -56,6 +61,8 @@ public class BirthdayService extends Service {
                     keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
                     powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
                     defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class,
+                            getApplicationContext());
+                    actionPrefs = Esperandro.getPreferences(ActionPrefs.class,
                             getApplicationContext());
 
                     registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
@@ -83,7 +90,23 @@ public class BirthdayService extends Service {
         this.birthdaysInRange = new ArrayList<>();
         for (Contact contact : allContactsWithBirthdays) {
             if (contact.daysTillBirthday() <= Integer.parseInt(defaultPrefs.maxDaysTillBirthday())) {
-                birthdaysInRange.add(contact);
+                HashMap<Integer, Long> dismissedBirthdays = actionPrefs.dismissedBirthdays();
+                boolean dismiss = false;
+                if (dismissedBirthdays != null) {
+                    if (dismissedBirthdays.containsKey(contact.getId())) {
+                        DateTime dismissedAt = new DateTime(dismissedBirthdays.get(contact.getId()));
+                        DateTime today = DateTime.now().withTimeAtStartOfDay();
+                        if (dismissedAt.isBefore(today)) {
+                            dismissedBirthdays.remove(contact.getId());
+                            actionPrefs.dismissedBirthdays(dismissedBirthdays);
+                        } else {
+                            dismiss = dismissedAt.isEqual(today);
+                        }
+                    }
+                }
+                if (!dismiss) {
+                    birthdaysInRange.add(contact);
+                }
             }
         }
         Collections.sort(birthdaysInRange);
@@ -144,6 +167,7 @@ public class BirthdayService extends Service {
     };
 
     private void updateNotifications() {
+        updateBirthdays(false);
         lastNotificationUpdate = new DateTime();
         notificationManager.cancelAll();
         for (Contact contact : birthdaysInRange) {
@@ -151,19 +175,24 @@ public class BirthdayService extends Service {
             Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI,
                     String.valueOf(contact.getId()));
             contactIntent.setData(uri);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+            PendingIntent mainAction = PendingIntent.getActivity(getApplicationContext(),
                     contact.getId(), contactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+            Intent dismissIntent = new Intent(getApplicationContext(), DismissReceiver.class);
+            dismissIntent.putExtra(DismissReceiver.EXTRA_CONTACT_ID, contact.getId());
+            PendingIntent dismissAction = PendingIntent.getBroadcast(getApplicationContext(),
+                    contact.getId(), dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             Notification.Builder notificationBuilder = new Notification.Builder(
                     getApplicationContext());
             Icon icon = Icon.valueOf(defaultPrefs.icon());
+
             notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
-                               .setContentTitle(contact.getDisplayName())
-                               .setContentText(contact.getMessageText(getApplicationContext()))
-                               .setPriority(Notification.PRIORITY_MAX)
-                               .setShowWhen(false)
-                               .setContentIntent(pendingIntent)
-                               .setSmallIcon(icon.getNotificationIconId());
+                    .setContentTitle(contact.getDisplayName())
+                    .setContentText(contact.getMessageText(getApplicationContext()))
+                    .setPriority(Notification.PRIORITY_MAX)
+                    .setShowWhen(false)
+                    .setContentIntent(mainAction)
+                    .addAction(R.drawable.ic_action_done, getBaseContext().getString(R.string.action_dismiss), dismissAction)
+                    .setSmallIcon(icon.getNotificationIconId());
             Notification notif = notificationBuilder.build();
             notificationManager.notify(contact.getId(), notif);
         }

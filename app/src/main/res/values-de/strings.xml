@@ -30,4 +30,5 @@
         <item>Cake</item>
         <item>Cupcake</item>
     </string-array>
+    <string name="action_dismiss">Fertig für heute</string>
 </resources>

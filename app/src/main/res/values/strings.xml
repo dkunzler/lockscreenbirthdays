@@ -22,6 +22,8 @@
     <string name="title_daysTillBirthday">Show a notification…</string>
     <string name="title_icon">App Icon</string>
 
+    <string name="action_dismiss">Dismiss for today</string>
+
     <string-array name="donationValues">
         <item>A coffee</item>
         <item>a beer</item>

@@ -61,6 +61,11 @@ public class MainFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        if (defaultPrefs.serviceEnabled() && !BirthdayService.isRunning) {
+            Intent service = new Intent(getActivity(), BirthdayService.class);
+            getActivity().startService(service);
+        }
+
         if (getActivity().getActionBar() != null) {
             getActivity().getActionBar().setTitle(R.string.title_activity_main);
         }
