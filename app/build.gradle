@@ -25,6 +25,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
 }
 
@@ -32,7 +35,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.google.android.gms:play-services-base:11.6.2'
     implementation 'com.pkmmte.view:circularimageview:1.1'
     implementation 'com.balysv:material-ripple:1.0.2'
     implementation 'com.squareup.picasso:picasso:2.4.0'
@@ -40,12 +42,13 @@ dependencies {
 
     implementation "joda-time:joda-time:2.6"
 
-    implementation 'com.jakewharton:butterknife:6.0.0' // Apache v2.0
+    implementation 'com.jakewharton:butterknife:8.8.1' // Apache v2.0
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1' // Apache v2.0
 
-    implementation 'de.devland.esperandro:esperandro-api:2.2.0' // Apache v2.0
-    implementation 'de.devland.esperandro:esperandro-gson-addon:2.2.0' // Apache v2.0
-    annotationProcessor 'de.devland.esperandro:esperandro:2.2.0' // Apache v2.0
+    implementation 'de.devland.esperandro:esperandro-api:2.5.1' // Apache v2.0
+    implementation 'de.devland.esperandro:esperandro-gson-addon:2.5.1' // Apache v2.0
+    annotationProcessor 'de.devland.esperandro:esperandro:2.5.1' // Apache v2.0
 
-    compileOnly "org.projectlombok:lombok:1.12.6"
-    annotationProcessor "org.projectlombok:lombok:1.12.6"
+    compileOnly "org.projectlombok:lombok:1.16.18"
+    annotationProcessor "org.projectlombok:lombok:1.16.18"
 }

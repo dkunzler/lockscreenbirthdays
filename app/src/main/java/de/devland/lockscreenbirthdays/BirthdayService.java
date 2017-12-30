@@ -1,5 +1,6 @@
 package de.devland.lockscreenbirthdays;
 
+import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -23,6 +24,7 @@ import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,7 +142,15 @@ public class BirthdayService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (!keyguardManager.inKeyguardRestrictedInputMode()) {
-                notificationManager.cancelAll();
+                int keepAfterLogin = Integer.parseInt(defaultPrefs.keepAfterLogin());
+                if (keepAfterLogin > 0) {
+                    PendingIntent removeNotification = PendingIntent.getBroadcast(context, 55, new Intent(context, RemoveNotificationReceiver.class), 0);
+
+                    AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.setExact(AlarmManager.RTC, new Date().getTime() + keepAfterLogin * 1000, removeNotification);
+                } else {
+                    notificationManager.cancelAll();
+                }
             } else {
                 if (lastNotificationUpdate.isBefore(new LocalDate().toDateTimeAtStartOfDay())) {
                     updateBirthdays(true);

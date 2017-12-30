@@ -17,8 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import de.devland.lockscreenbirthdays.model.Contact;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,18 +31,18 @@ public class BirthdayAdapter extends RecyclerView.Adapter {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @InjectView(R.id.image_contact)
+        @BindView(R.id.image_contact)
         public ImageView contactImage;
-        @InjectView(R.id.textView_message)
+        @BindView(R.id.textView_message)
         public TextView message;
-        @InjectView(R.id.textView_name)
+        @BindView(R.id.textView_name)
         public TextView name;
         public View itemView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
-            ButterKnife.inject(this, itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 

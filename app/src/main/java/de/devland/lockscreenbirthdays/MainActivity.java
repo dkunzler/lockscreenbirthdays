@@ -6,15 +6,15 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toolbar;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 
 
 public class MainActivity extends Activity {
 
-    @InjectView(R.id.toolbar)
+    @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
     @Override
@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
                     .commit();
         }
         Esperandro.getPreferences(DefaultPrefs.class, this).initDefaults();
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         setActionBar(toolbar);
     }
 

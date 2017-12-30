@@ -30,6 +30,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
         addPreferencesFromResource(R.xml.pref_main);
         bindPreferenceSummaryToValue(findPreference("maxDaysTillBirthday"));
+        bindPreferenceSummaryToValue(findPreference("keepAfterLogin"));
         findPreference("icon").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -93,6 +94,10 @@ public class SettingsFragment extends PreferenceFragment implements
             }
             if (preference.getKey().equals("maxDaysTillBirthday")) {
                 String format = getActivity().getResources().getString(R.string.summary_daysTillBirthday);
+                String summary = MessageFormat.format(format, Integer.parseInt(stringValue));
+                preference.setSummary(summary);
+            } else if (preference.getKey().equals("keepAfterLogin")) {
+                String format = getActivity().getResources().getString(R.string.summary_keepAfterLogin);
                 String summary = MessageFormat.format(format, Integer.parseInt(stringValue));
                 preference.setSummary(summary);
             } else {

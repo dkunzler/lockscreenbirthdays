@@ -108,6 +108,15 @@ public class Contact implements Comparable<Contact> {
 
 
     public int getNewAge() {
+        // easter egg: Sven Obser is always 29
+        if (displayName.equals("Sven Obser")
+                && getBirthdayObject().isCorrectBirthday()
+                && getBirthdayObject().getYear() == 1985
+                && getBirthdayObject().getMonth() == 12
+                && getBirthdayObject().getDay() == 4) {
+            return 29;
+        }
+
         Birthday birthday = getBirthdayObject();
         int newAge = -1;
         if (birthday.hasYear()) {

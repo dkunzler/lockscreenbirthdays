@@ -31,4 +31,6 @@
         <item>Cupcake</item>
     </string-array>
     <string name="action_dismiss">Fertig für heute</string>
+    <string name="title_keepAfterLogin">Benachrichtigung nach Unlock stehen lassen…</string>
+    <string name="summary_keepAfterLogin">… für {0} Sekunden.</string>
 </resources>

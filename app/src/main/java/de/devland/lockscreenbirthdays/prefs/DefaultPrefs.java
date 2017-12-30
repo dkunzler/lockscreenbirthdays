@@ -11,6 +11,10 @@ import de.devland.lockscreenbirthdays.util.Icon;
 @SharedPreferences
 public interface DefaultPrefs extends SharedPreferenceActions {
 
+    @Default(ofString = "0")
+    String keepAfterLogin();
+    void keepAfterLogin(String keepAfterLogin);
+
     @Default(ofString = "2")
     String maxDaysTillBirthday();
     void maxDaysTillBirthday(String daysTillBirthday);

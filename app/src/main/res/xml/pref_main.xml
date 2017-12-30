@@ -10,6 +10,10 @@
         android:inputType="number"
         android:key="maxDaysTillBirthday"
         android:title="@string/title_daysTillBirthday" />
+    <EditTextPreference
+        android:inputType="number"
+        android:key="keepAfterLogin"
+        android:title="@string/title_keepAfterLogin" />
     <de.devland.lockscreenbirthdays.prefs.FeedbackPreference android:title="@string/title_feedback" />
     <de.devland.lockscreenbirthdays.prefs.InformationDialogPreference
         content="raw/credits"
