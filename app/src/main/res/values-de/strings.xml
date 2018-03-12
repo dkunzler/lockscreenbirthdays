@@ -33,4 +33,9 @@
     <string name="action_dismiss">Fertig für heute</string>
     <string name="title_keepAfterLogin">Benachrichtigung nach Unlock stehen lassen…</string>
     <string name="summary_keepAfterLogin">… für {0} Sekunden.</string>
+
+    <string name="channel_birthdays_name">Geburtstage</string>
+    <string name="channel_birthdays_description">Alle Geburtstagsbenachrichtigungen</string>
+    <string name="channel_service_name">Service</string>
+    <string name="channel_service_description">Service Benachrichtigung</string>
 </resources>
