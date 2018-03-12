@@ -1,41 +1,32 @@
-package de.devland.lockscreenbirthdays;
+package de.devland.lockscreenbirthdays.service;
 
-import android.app.AlarmManager;
-import android.app.KeyguardManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.app.*;
+import android.content.*;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.ContactsContract;
-import android.util.SparseArray;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import de.devland.esperandro.Esperandro;
+import de.devland.lockscreenbirthdays.App;
+import de.devland.lockscreenbirthdays.R;
+import de.devland.lockscreenbirthdays.ServiceInfoActivity;
 import de.devland.lockscreenbirthdays.model.Contact;
 import de.devland.lockscreenbirthdays.prefs.ActionPrefs;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 import de.devland.lockscreenbirthdays.util.Icon;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
+import java.util.*;
 
 public class BirthdayService extends Service {
+    public static final String CHANNEL_BIRTHDAYS = "channelBirthdays";
+    public static final String CHANNEL_SERVICE = "channelService";
 
     private NotificationManager notificationManager;
     private KeyguardManager keyguardManager;
@@ -44,6 +35,8 @@ public class BirthdayService extends Service {
     private DefaultPrefs defaultPrefs;
     private ActionPrefs actionPrefs;
 
+    private UserPresentReceiver userPresentReceiver = new UserPresentReceiver();
+
     public static volatile boolean isRunning = false;
 
     private List<Contact> allContactsWithBirthdays;
@@ -51,34 +44,63 @@ public class BirthdayService extends Service {
 
     private DateTime lastNotificationUpdate = new DateTime();
 
+    public static void start(Context context) {
+        Intent service = new Intent(context, BirthdayService.class);
+//        context.startService(service);
+        ContextCompat.startForegroundService(App.getInstance(), service);
+    }
+
+    public static void stop(Context context) {
+        Intent service = new Intent(context, BirthdayService.class);
+        context.stopService(service);
+    }
+
+    @Override
+    public void onCreate() {
+        defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class,
+                getApplicationContext());
+        actionPrefs = Esperandro.getPreferences(ActionPrefs.class,
+                getApplicationContext());
+        notificationManager = (NotificationManager) getSystemService(
+                Context.NOTIFICATION_SERVICE);
+        keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Icon icon = Icon.valueOf(defaultPrefs.icon());
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_SERVICE);
+            builder.setContentTitle(getString(R.string.app_name))
+                    .setSmallIcon(icon.getNotificationIconId())
+                    .setContentIntent(PendingIntent.getActivity(getApplicationContext(), -2,
+                            new Intent(getApplicationContext(), ServiceInfoActivity.class), PendingIntent.FLAG_UPDATE_CURRENT));
+
+            startForeground(Integer.MAX_VALUE, builder.build());
+        }
         if (!isRunning) {
             synchronized (BirthdayService.class) {
                 if (!isRunning) {
                     isRunning = true;
-                    notificationManager = (NotificationManager) getSystemService(
-                            Context.NOTIFICATION_SERVICE);
-                    keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                    powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                    defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class,
-                            getApplicationContext());
-                    actionPrefs = Esperandro.getPreferences(ActionPrefs.class,
-                            getApplicationContext());
 
                     registerReceiver(screenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
                     registerReceiver(screenOnReceiver, new IntentFilter(Intent.ACTION_SCREEN_ON));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        registerReceiver(userPresentReceiver, new IntentFilter(Intent.ACTION_USER_PRESENT));
+                    }
                     getContentResolver().registerContentObserver(
                             ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
                     defaultPrefs.registerOnChangeListener(settingsChangeListener);
 
-                    updateBirthdays(true);
-                    if (!powerManager.isInteractive()) {
-                        updateNotifications();
-                    }
                 }
             }
+        }
+
+        updateBirthdays(true);
+        if (!powerManager.isInteractive()) {
+            updateNotifications();
         }
 
         return START_STICKY;
@@ -120,6 +142,9 @@ public class BirthdayService extends Service {
         super.onDestroy();
         unregisterReceiver(screenOffReceiver);
         unregisterReceiver(screenOnReceiver);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            unregisterReceiver(userPresentReceiver);
+        }
         getContentResolver().unregisterContentObserver(contactObserver);
         defaultPrefs.unregisterOnChangeListener(settingsChangeListener);
         isRunning = false;
@@ -134,7 +159,7 @@ public class BirthdayService extends Service {
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange, uri);
-            updateBirthdays(true);
+            start(getApplicationContext());
         }
     };
 
@@ -144,7 +169,8 @@ public class BirthdayService extends Service {
             if (!keyguardManager.inKeyguardRestrictedInputMode()) {
                 int keepAfterLogin = Integer.parseInt(defaultPrefs.keepAfterLogin());
                 if (keepAfterLogin > 0) {
-                    PendingIntent removeNotification = PendingIntent.getBroadcast(context, 55, new Intent(context, RemoveNotificationReceiver.class), 0);
+                    PendingIntent removeNotification = PendingIntent.getBroadcast(context, -1,
+                            new Intent(context, RemoveNotificationReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     alarmManager.setExact(AlarmManager.RTC, new Date().getTime() + keepAfterLogin * 1000, removeNotification);
@@ -153,8 +179,7 @@ public class BirthdayService extends Service {
                 }
             } else {
                 if (lastNotificationUpdate.isBefore(new LocalDate().toDateTimeAtStartOfDay())) {
-                    updateBirthdays(true);
-                    updateNotifications();
+                    start(getApplicationContext());
                 }
             }
         }
@@ -163,7 +188,7 @@ public class BirthdayService extends Service {
     private BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            updateNotifications();
+            start(getApplicationContext());
         }
     };
 
@@ -191,9 +216,10 @@ public class BirthdayService extends Service {
             dismissIntent.putExtra(DismissReceiver.EXTRA_CONTACT_ID, contact.getId());
             PendingIntent dismissAction = PendingIntent.getBroadcast(getApplicationContext(),
                     contact.getId(), dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            Notification.Builder notificationBuilder = new Notification.Builder(
-                    getApplicationContext());
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
+                    getApplicationContext(), CHANNEL_BIRTHDAYS);
             Icon icon = Icon.valueOf(defaultPrefs.icon());
+
 
             notificationBuilder.setLargeIcon(contact.getContactBitmap(getApplicationContext()))
                     .setContentTitle(contact.getDisplayName())
@@ -201,6 +227,7 @@ public class BirthdayService extends Service {
                     .setPriority(Notification.PRIORITY_MAX)
                     .setShowWhen(false)
                     .setContentIntent(mainAction)
+                    .setChannelId(CHANNEL_BIRTHDAYS)
                     .addAction(R.drawable.ic_action_done, getBaseContext().getString(R.string.action_dismiss), dismissAction)
                     .setSmallIcon(icon.getNotificationIconId());
             Notification notif = notificationBuilder.build();

@@ -1,4 +1,4 @@
-package de.devland.lockscreenbirthdays;
+package de.devland.lockscreenbirthdays.service;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;

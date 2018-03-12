@@ -26,6 +26,11 @@
 
     <string name="action_dismiss">Dismiss for today</string>
 
+    <string name="channel_birthdays_name">Birthdays</string>
+    <string name="channel_birthdays_description">All birthday notifications</string>
+    <string name="channel_service_name">Service</string>
+    <string name="channel_service_description">Keep the Service running</string>
+
     <string-array name="donationValues">
         <item>A coffee</item>
         <item>a beer</item>

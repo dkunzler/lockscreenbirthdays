@@ -1,4 +1,4 @@
-package de.devland.lockscreenbirthdays;
+package de.devland.lockscreenbirthdays.service;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -9,6 +9,7 @@ import android.content.Intent;
 
 import java.util.Date;
 
+import android.support.v4.content.ContextCompat;
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 
@@ -33,8 +34,7 @@ public class UserPresentReceiver extends BroadcastReceiver {
 
         // if the service was stopped due to memory problems, restart it
         if (defaultPrefs.serviceEnabled() && !BirthdayService.isRunning) {
-            Intent service = new Intent(context, BirthdayService.class);
-            context.startService(service);
+            BirthdayService.start(context);
         }
     }
 }

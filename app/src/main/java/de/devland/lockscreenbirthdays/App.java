@@ -2,9 +2,14 @@ package de.devland.lockscreenbirthdays;
 
 import android.app.Application;
 
+import android.content.ComponentName;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
+import de.devland.lockscreenbirthdays.service.UserPresentReceiver;
 import de.devland.lockscreenbirthdays.util.Icon;
+import de.devland.lockscreenbirthdays.util.NotificationChannels;
 
 
 /**
@@ -24,6 +29,17 @@ public class App extends Application {
         DefaultPrefs defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, this);
         defaultPrefs.initDefaults();
         Icon.valueOf(defaultPrefs.icon()).set();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // init nofification channel
+            new NotificationChannels().init(this);
+            // disable implicit user present receiver
+            PackageManager pm = getPackageManager();
+            ComponentName receiverComponent = new ComponentName(this, UserPresentReceiver.class);
+            pm.setComponentEnabledSetting(receiverComponent, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
+        }
     }
+
+
 
 }

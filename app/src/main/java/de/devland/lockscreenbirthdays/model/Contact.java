@@ -17,11 +17,13 @@ import java.util.List;
 
 import de.devland.lockscreenbirthdays.R;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Created by David Kunzler on 02.01.2015.
  */
 @Getter
+@ToString(of = {"id", "displayName", "birthday"})
 public class Contact implements Comparable<Contact> {
     private int id;
 

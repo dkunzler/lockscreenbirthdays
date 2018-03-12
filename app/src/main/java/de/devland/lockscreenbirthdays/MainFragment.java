@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +31,7 @@ import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.model.Contact;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 import de.devland.lockscreenbirthdays.prefs.SettingsFragment;
+import de.devland.lockscreenbirthdays.service.BirthdayService;
 
 /**
  * Created by David Kunzler on 03.01.2015.
@@ -82,8 +82,7 @@ public class MainFragment extends Fragment {
         }
 
         if (defaultPrefs.serviceEnabled() && !BirthdayService.isRunning) {
-            Intent service = new Intent(getActivity(), BirthdayService.class);
-            getActivity().startService(service);
+            BirthdayService.start(getActivity());
         }
 
         if (getActivity().getActionBar() != null) {
@@ -124,13 +123,12 @@ public class MainFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 defaultPrefs.serviceEnabled(isChecked);
-                Intent service = new Intent(getActivity().getApplicationContext(), BirthdayService.class);
                 if (isChecked) {
                     if (!BirthdayService.isRunning) {
-                        getActivity().startService(service);
+                        BirthdayService.start(getActivity());
                     }
                 } else {
-                    getActivity().stopService(service);
+                    BirthdayService.stop(getActivity());
                 }
             }
         });
