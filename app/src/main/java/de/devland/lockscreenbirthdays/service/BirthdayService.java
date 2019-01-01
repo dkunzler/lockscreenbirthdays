@@ -42,7 +42,7 @@ public class BirthdayService extends Service {
     private List<Contact> allContactsWithBirthdays;
     private List<Contact> birthdaysInRange;
 
-    private DateTime lastNotificationUpdate = new DateTime();
+    public static volatile DateTime lastNotificationUpdate = null;
 
     public static void start(Context context) {
         Intent service = new Intent(context, BirthdayService.class);
@@ -176,9 +176,10 @@ public class BirthdayService extends Service {
                     alarmManager.setExact(AlarmManager.RTC, new Date().getTime() + keepAfterLogin * 1000, removeNotification);
                 } else {
                     notificationManager.cancelAll();
+                    lastNotificationUpdate = null;
                 }
             } else {
-                if (lastNotificationUpdate.isBefore(new LocalDate().toDateTimeAtStartOfDay())) {
+                if (lastNotificationUpdate == null || lastNotificationUpdate.isBefore(new LocalDate().toDateTimeAtStartOfDay())) {
                     start(getApplicationContext());
                 }
             }
@@ -188,7 +189,9 @@ public class BirthdayService extends Service {
     private BroadcastReceiver screenOffReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            start(getApplicationContext());
+            if (lastNotificationUpdate == null) {
+                start(getApplicationContext());
+            }
         }
     };
 
@@ -216,6 +219,8 @@ public class BirthdayService extends Service {
             dismissIntent.putExtra(DismissReceiver.EXTRA_CONTACT_ID, contact.getId());
             PendingIntent dismissAction = PendingIntent.getBroadcast(getApplicationContext(),
                     contact.getId(), dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent deleteIntent = new Intent(getApplicationContext(), DismissReceiver.class);
+
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
                     getApplicationContext(), CHANNEL_BIRTHDAYS);
             Icon icon = Icon.valueOf(defaultPrefs.icon());
@@ -229,7 +234,8 @@ public class BirthdayService extends Service {
                     .setContentIntent(mainAction)
                     .setChannelId(CHANNEL_BIRTHDAYS)
                     .addAction(R.drawable.ic_action_done, getBaseContext().getString(R.string.action_dismiss), dismissAction)
-                    .setSmallIcon(icon.getNotificationIconId());
+                    .setSmallIcon(icon.getNotificationIconId())
+                    .setDeleteIntent(PendingIntent.getBroadcast(getApplicationContext(), -3, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT));
             Notification notif = notificationBuilder.build();
             notificationManager.notify(contact.getId(), notif);
         }

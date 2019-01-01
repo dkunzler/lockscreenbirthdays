@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
+
 import de.devland.esperandro.Esperandro;
 import de.devland.lockscreenbirthdays.prefs.DefaultPrefs;
 import de.devland.lockscreenbirthdays.service.UserPresentReceiver;
@@ -22,10 +24,12 @@ public class App extends Application {
         return App.instance;
     }
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
+        Log.d("App", "onCreate: called");
         DefaultPrefs defaultPrefs = Esperandro.getPreferences(DefaultPrefs.class, this);
         defaultPrefs.initDefaults();
         Icon.valueOf(defaultPrefs.icon()).set();

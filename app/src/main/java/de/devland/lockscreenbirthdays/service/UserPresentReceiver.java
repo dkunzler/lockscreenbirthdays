@@ -30,6 +30,7 @@ public class UserPresentReceiver extends BroadcastReceiver {
         } else {
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancelAll();
+            BirthdayService.lastNotificationUpdate = null;
         }
 
         // if the service was stopped due to memory problems, restart it

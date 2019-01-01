@@ -34,6 +34,8 @@ public class DismissReceiver extends BroadcastReceiver {
             actionPrefs.dismissedBirthdays(dismissedBirthdays);
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(contactId);
+        } else {
+            BirthdayService.lastNotificationUpdate = null;
         }
     }
 }
