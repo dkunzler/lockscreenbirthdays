@@ -28,7 +28,8 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main"
+            android:excludeFromRecents="true"/>
         <activity android:name=".OnBoardingActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.Intro"/>
