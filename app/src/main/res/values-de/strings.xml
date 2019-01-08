@@ -38,4 +38,12 @@
     <string name="channel_birthdays_description">Alle Geburtstagsbenachrichtigungen</string>
     <string name="channel_service_name">Service</string>
     <string name="channel_service_description">Service Benachrichtigung</string>
+
+    <string name="slide_title_welcome">Willkommen</string>
+    <string name="slide_desc_welcome">Diese App erinnert dich an die Geburtstage deiner Kontakte indem eine Benachrichtigung angezeigt wird, sobald du deinen Bildschirm einschaltet.</string>
+    <string name="slide_title_permissions">Berechtigungen</string>
+    <string name="slide_desc_permissions">Diese App braucht die Berechtigung deine Kontakte zu lesen um korrekt zu funktionieren.</string>
+    <string name="slide_title_battery">Akku-Optimierung</string>
+    <string name="slide_desc_battery">Bitte schalte die Akku-Optimierung für diese App aus, damit sie im Hinterrund laufen kann und dich so pünktlich an die Geburtstage deiner Kontakte erinnern kann.</string>
+    <string name="slide_btn_battery">Akku-Optimierung ausschalten</string>
 </resources>

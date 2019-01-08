@@ -30,6 +30,13 @@
     <string name="channel_birthdays_description">All birthday notifications</string>
     <string name="channel_service_name">Service</string>
     <string name="channel_service_description">Keep the Service running</string>
+    <string name="slide_title_welcome">Welcome</string>
+    <string name="slide_desc_welcome">This app shows the birthdays of your contacts as a notification after turning on your device screen.</string>
+    <string name="slide_title_permissions">Permissions</string>
+    <string name="slide_desc_permissions">This app needs the permission to read contacts to function properly.</string>
+    <string name="slide_title_battery">Battery Optimizations</string>
+    <string name="slide_desc_battery">Please turn off battery optimizations for this app to make sure it can run in the background and can remind you of your contact\'s birthdays.</string>
+    <string name="slide_btn_battery">Turn off Battery Optimizations</string>
 
     <string-array name="donationValues">
         <item>A coffee</item>

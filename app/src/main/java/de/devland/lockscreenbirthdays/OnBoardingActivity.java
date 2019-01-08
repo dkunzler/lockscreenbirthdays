@@ -17,8 +17,6 @@ public class OnBoardingActivity extends IntroActivity {
 
     private static final int POSITION_BATTERY = 2;
 
-    private SimpleSlide batterySlide;
-
     @SuppressLint("BatteryLife")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,31 +25,30 @@ public class OnBoardingActivity extends IntroActivity {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
         addSlide(new SimpleSlide.Builder()
-                .title("Welcome")
-                .description("This app shows the birthdays of your contacts as notification after turning on your device.")
+                .title(R.string.slide_title_welcome)
+                .description(R.string.slide_desc_welcome)
                 .image(R.mipmap.ic_launcher_cupcake)
                 .background(R.color.md_blue_500)
                 .backgroundDark(R.color.primary_dark)
                 .build());
 
         addSlide(new SimpleSlide.Builder()
-                .title("Permissions")
-                .description("This app needs the permission to read contacts to function properly.")
+                .title(R.string.slide_title_permissions)
+                .description(R.string.slide_desc_permissions)
                 .image(R.drawable.ic_contacts)
                 .permission(Manifest.permission.READ_CONTACTS)
                 .background(R.color.md_red_300)
                 .backgroundDark(R.color.primary_dark)
                 .build());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
-            batterySlide = new SimpleSlide.Builder()
-                    .title("Battery Optimizations")
-                    .description("Please turn off battery optimizations for this app to make sure it stays in the background and can remind you of your contact's birthdays.")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && powerManager != null && !powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
+            Intent batteryOptimizationIntent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + getPackageName()));
+            SimpleSlide batterySlide = new SimpleSlide.Builder()
+                    .title(R.string.slide_title_battery)
+                    .description(R.string.slide_desc_battery)
                     .image(R.drawable.ic_battery)
-                    .buttonCtaLabel("Turn off Battery Optimizations")
-                    .buttonCtaClickListener(__ -> {
-                        startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + getPackageName())));
-                    })
+                    .buttonCtaLabel(R.string.slide_btn_battery)
+                    .buttonCtaClickListener(__ -> startActivity(batteryOptimizationIntent))
                     .background(R.color.md_green_700)
                     .backgroundDark(R.color.primary_dark)
                     .canGoForward(false)
@@ -65,7 +62,7 @@ public class OnBoardingActivity extends IntroActivity {
         super.onResume();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getCurrentSlidePosition() == POSITION_BATTERY) {
             PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
+            if (powerManager == null || powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
                 // we probably came from the dialog to whitelist our app and it worked -> Move on
                 setResult(RESULT_OK);
                 finish();
