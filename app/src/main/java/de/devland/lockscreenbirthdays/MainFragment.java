@@ -2,7 +2,6 @@ package de.devland.lockscreenbirthdays;
 
 import android.Manifest;
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,13 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
@@ -37,6 +36,7 @@ import de.devland.lockscreenbirthdays.service.BirthdayService;
  * Created by David Kunzler on 03.01.2015.
  */
 public class MainFragment extends Fragment {
+    private static final String TAG = "MainFragment";
 
     @BindView(R.id.serviceSwitch)
     protected Switch serviceSwitch;
@@ -55,8 +55,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
     @Override
@@ -92,16 +91,13 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    updateBirthdays();
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
-                }
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == 1) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                updateBirthdays();
+                // permission was granted, yay! Do the
+                // contacts-related task you need to do.
             }
         }
     }
@@ -119,30 +115,29 @@ public class MainFragment extends Fragment {
         }
 
         serviceSwitch.setChecked(defaultPrefs.serviceEnabled());
-        serviceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                defaultPrefs.serviceEnabled(isChecked);
-                if (isChecked) {
-                    if (!BirthdayService.isRunning) {
-                        BirthdayService.start(getActivity());
-                    }
-                } else {
-                    BirthdayService.stop(getActivity());
+        serviceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            defaultPrefs.serviceEnabled(isChecked);
+            if (isChecked) {
+                if (!BirthdayService.isRunning) {
+                    BirthdayService.start(getActivity());
                 }
+            } else {
+                BirthdayService.stop(getActivity());
             }
         });
 
         if (!defaultPrefs.serviceShowcased()) {
             try {
-                ShowcaseView.Builder showCaseBuilder = new ShowcaseView.Builder(getActivity(), true);
+                ShowcaseView.Builder showCaseBuilder = new ShowcaseView.Builder(getActivity());
                 showCaseBuilder.hideOnTouchOutside().setContentTitle(R.string.showcase_serviceTitle)
+                        .withNewStyleShowcase()
                         .setStyle(R.style.ShowcaseLightTheme)
                         .setContentText(R.string.showcase_serviceText)
                         .hideOnTouchOutside()
                         .setTarget(new ViewTarget(serviceSwitch));
                 showCaseBuilder.build().show();
             } catch (Exception e) {
+                Log.e(TAG, "onViewCreated: failed to showcase service usage", e);
             } finally {
                 defaultPrefs.serviceShowcased(true);
             }

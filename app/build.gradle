@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.pkmmte.view:circularimageview:1.1'
     implementation 'com.balysv:material-ripple:1.0.2'
     implementation 'com.squareup.picasso:picasso:2.4.0'
-    implementation 'com.github.amlcurran.showcaseview:library:5.0.0' //  Apache v2.0
+    implementation 'com.github.amlcurran.showcaseview:library:5.4.3' //  Apache v2.0
     implementation 'com.heinrichreimersoftware:material-intro:1.6.2'
 
     implementation "joda-time:joda-time:2.6"
