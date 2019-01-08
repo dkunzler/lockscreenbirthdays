@@ -27,7 +27,7 @@ public class OnBoardingActivity extends IntroActivity {
         addSlide(new SimpleSlide.Builder()
                 .title(R.string.slide_title_welcome)
                 .description(R.string.slide_desc_welcome)
-                .image(R.mipmap.ic_launcher_cupcake)
+                .image(R.drawable.ic_cupcake_large)
                 .background(R.color.md_blue_500)
                 .backgroundDark(R.color.primary_dark)
                 .build());
