@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -183,6 +184,8 @@ public class Contact implements Comparable<Contact> {
 
     @Getter
     public static class Birthday {
+        private static final String TAG = "Birthday";
+
         private int year = -1;
         private int month;
         private int day;
@@ -191,14 +194,18 @@ public class Contact implements Comparable<Contact> {
         public static Birthday fromString(String birthdayString) {
             Birthday birthday = new Birthday();
 
-            String[] results = birthdayString.split("-");
-            if (results.length == 4) {
-                birthday.day = Integer.parseInt(results[3]);
-                birthday.month = Integer.parseInt(results[2]);
-            } else if (results.length == 3) {
-                birthday.day = Integer.parseInt(results[2]);
-                birthday.month = Integer.parseInt(results[1]);
-                birthday.year = Integer.parseInt(results[0]);
+            try {
+                String[] results = birthdayString.split("-");
+                if (results.length == 4) {
+                    birthday.day = Integer.parseInt(results[3]);
+                    birthday.month = Integer.parseInt(results[2]);
+                } else if (results.length == 3) {
+                    birthday.day = Integer.parseInt(results[2]);
+                    birthday.month = Integer.parseInt(results[1]);
+                    birthday.year = Integer.parseInt(results[0]);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "fromString: Error parsing birthday", e);
             }
 
             return birthday;
