@@ -13,9 +13,9 @@ import android.provider.Settings;
 import com.heinrichreimersoftware.materialintro.app.IntroActivity;
 import com.heinrichreimersoftware.materialintro.slide.SimpleSlide;
 
-public class OnBoardingActivity extends IntroActivity {
+import de.devland.lockscreenbirthdays.util.ForwardConditionedSlide;
 
-    private static final int POSITION_BATTERY = 2;
+public class OnBoardingActivity extends IntroActivity {
 
     @SuppressLint("BatteryLife")
     @Override
@@ -42,32 +42,17 @@ public class OnBoardingActivity extends IntroActivity {
                 .build());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && powerManager != null && !powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
-            Intent batteryOptimizationIntent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + getPackageName()));
-            SimpleSlide batterySlide = new SimpleSlide.Builder()
+            addSlide(new ForwardConditionedSlide.ForwardConditionedBuilder()
+                    .canGoForward(() -> powerManager.isIgnoringBatteryOptimizations(getPackageName()))
                     .title(R.string.slide_title_battery)
                     .description(R.string.slide_desc_battery)
                     .image(R.drawable.ic_battery)
                     .buttonCtaLabel(R.string.slide_btn_battery)
-                    .buttonCtaClickListener(__ -> startActivity(batteryOptimizationIntent))
+                    .buttonCtaClickListener(__ -> startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + getPackageName()))))
                     .background(R.color.md_green_700)
                     .backgroundDark(R.color.primary_dark)
-                    .canGoForward(false)
-                    .build();
-            addSlide(batterySlide);
+                    .build());
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getCurrentSlidePosition() == POSITION_BATTERY) {
-            PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            if (powerManager == null || powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
-                // we probably came from the dialog to whitelist our app and it worked -> Move on
-                setResult(RESULT_OK);
-                finish();
-            }
-        }
-
-    }
 }
